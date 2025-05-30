@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loja do Zé - Início</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- CABEÇALHO / MENU -->
+  <header class="menu">
+    <div class="logo">
+      <i class="fa-solid fa-store"></i> Loja do Zé
+    </div>
+    <nav class="acoes-topo">
+      <a href="carrinho.html" class="carrinho">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span id="contador-carrinho">0</span>
+      </a>
+      <a href="perfil.html">
+        <i class="fa-solid fa-user"></i>
+      </a>
+      <div class="cep-ios" onclick="abrirModalCEP()">
+  <i class="fas fa-location-dot"></i>
+  <span>Enviar para: <strong id="cep-atual">07844-310</strong></span>
+</div>
+      <div class="hamburguer" onclick="abrirMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+    <ul id="menu-hamburguer">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="favoritos.html">Meus Favoritos</a></li>
+      <li><a href="pedidos.html">Meus Pedidos</a></li>
+      <li><a href="perfil.html">Meu Perfil</a></li>
+      <li><a href="contato.html">Contato</a></li>
+    </ul>
+</div>
+<!-- Overlay escurecido -->
+<div id="overlay-cep" class="overlay"></div>
+
+<!-- Modal estilo iOS -->
+<div id="modal-cep" class="modal-cep">
+  <h2>Informe seu CEP</h2>
+  <input 
+    type="text" 
+    id="input-cep" 
+    maxlength="9" 
+    placeholder="00000-000" 
+    oninput="formatarCEP(this)">
+  <p id="mensagem-erro" class="mensagem-erro">CEP inválido</p>
+
+  <div class="botoes-cep">
+    <button class="btn-cancelar" onclick="fecharModalCEP()">Cancelar</button>
+    <button class="btn-confirmar" onclick="confirmarCEP()">Confirmar</button>
+  </div>
+</div>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main>
+    <h1>Bem-vindo à Loja do Zé</h1>
+    <p>Escolha seu produto e bora garantir o estilo 😎</p>
+
+    <div class="produtos-container">
+      <!-- Produto 1 -->
+      <div class="produto">
+        <img src="produto.jpg" alt="Camisa Oversized">
+        <h2>Camisa Oversized</h2>
+        <p>R$ 59,90</p>
+        <button onclick="verProduto('Camisa Oversized', 59.90, 'produto.jpg')">Ver Produto</button>
+        <div class="favorito" onclick="toggleFavorito('Camisa Oversized')">
+          <i class="fa-solid fa-heart"></i>
+        </div>
+      </div>
+
+      <!-- Produto 2 -->
+      <div class="produto">
+        <img src="produto.jpg" alt="Regata Treino">
+        <h2>Regata Treino</h2>
+        <p>R$ 39,90</p>
+        <button onclick="verProduto('Regata Treino', 39.90, 'produto.jpg')">Ver Produto</button>
+        <div class="favorito" onclick="toggleFavorito('Regata Treino')">
+          <i class="fa-solid fa-heart"></i>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- RODAPÉ -->
+  <footer>
+    <section class="sobre-ios-footer">
+    <h2>Sobre a Loja do Zé</h2>
+    <p>Somos apaixonados por estilo, conforto e preço justo. Na Loja do Zé, você encontra produtos selecionados com o melhor custo-benefício do mercado. Nosso objetivo é deixar você no drip gastando pouco 💸.</p>
+  </section>
+
+  <p style="text-align:center; font-size:14px; color: #ccc; margin-top: 20px;">© 2025 Loja do Zé – Todos os direitos reservados.</p>
+    <p>&copy; 2025 Loja do Zé. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    function abrirModalCEP() {
+  document.getElementById("overlay-cep").style.display = "block";
+  document.getElementById("modal-cep").style.display = "block";
+}
+
+function fecharModalCEP() {
+  document.getElementById("overlay-cep").style.display = "none";
+  document.getElementById("modal-cep").style.display = "none";
+  document.getElementById("mensagem-erro").style.display = "none";
+}
+
+function formatarCEP(input) {
+  let cep = input.value.replace(/\D/g, '');
+  if (cep.length > 5) {
+    cep = cep.slice(0, 5) + '-' + cep.slice(5);
+  }
+  input.value = cep;
+}
+
+function confirmarCEP() {
+  const input = document.getElementById("input-cep");
+  const erro = document.getElementById("mensagem-erro");
+  const cep = input.value;
+
+  if (!cep.match(/^\d{5}-\d{3}$/)) {
+    erro.textContent = "CEP inválido. Use o formato 00000-000.";
+    erro.style.display = "block";
+    input.style.borderColor = "red";
+    return;
+  }
+
+  document.getElementById("cep-atual").textContent = cep;
+  input.style.borderColor = "";
+  erro.style.display = "none";
+  fecharModalCEP();
+}
+    function verProduto(nome, preco, imagem) {
+      const produto = { nome, preco, imagem };
+      localStorage.setItem("produtoSelecionado", JSON.stringify(produto));
+      window.location.href = "produto.html";
+    }
+
+    function toggleFavorito(nome) {
+      let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+      const index = favoritos.indexOf(nome);
+      if (index !== -1) {
+        favoritos.splice(index, 1);
+      } else {
+        favoritos.push(nome);
+      }
+      localStorage.setItem("favoritos", JSON.stringify(favoritos));
+      atualizarIconesFavoritos();
+    }
+
+    function atualizarIconesFavoritos() {
+      const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+      document.querySelectorAll(".favorito").forEach((icon) => {
+        const nomeProduto = icon.getAttribute("onclick").match(/'(.*?)'/)[1];
+        if (favoritos.includes(nomeProduto)) {
+          icon.classList.add("ativo");
+        } else {
+          icon.classList.remove("ativo");
+        }
+      });
+    }
+
+    function atualizarContadorCarrinho() {
+      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || {};
+      let total = 0;
+      for (const chave in carrinho) {
+        total += carrinho[chave].quantidade;
+      }
+      const contador = document.getElementById("contador-carrinho");
+      if (contador) contador.textContent = total;
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      atualizarIconesFavoritos();
+      atualizarContadorCarrinho();
+
+      const produtos = [
+      {
+        nome: "Camisa Oversized",
+        preco: "59,90",
+        imagem: "produto.jpg"
+      },
+      {
+        nome: "Regata Treino",
+        preco: "39,90",
+        imagem: "produto.jpg"
+      }
+    ];
+
+    localStorage.setItem("produtosDisponiveis", JSON.stringify(produtos));
+    });
+  </script>
+
+  <script>
+  console.log("🧪 Script carregado");
+  const lista = document.getElementById("lista-favoritos");
+  if (lista) {
+    lista.innerHTML = `<p style="color: red;">✅ DOM tá vivo, carregando!</p>`;
+  } else {
+    console.log("❌ DOM não achou #lista-favoritos");
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avaliações do Produto</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+      font-size: 22px;
+      color: #007aff;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .avaliacoes-lista {
+      margin-bottom: 30px;
+    }
+
+    .avaliacao {
+      background-color: #f9f9f9;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .avaliacao strong {
+      color: #333;
+    }
+
+    .avaliacao small {
+      color: #999;
+      font-size: 12px;
+    }
+
+    .estrelas {
+      color: #f5a623;
+      margin: 6px 0;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    textarea {
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      resize: none;
+    }
+
+    .estrelas-input button {
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      color: #ccc;
+    }
+
+    .estrelas-input button.selected {
+      color: #f5a623;
+    }
+
+    .btn-enviar {
+      padding: 12px;
+      background-color: #007aff;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Avaliações do Produto</h1>
+
+    <div class="avaliacoes-lista" id="lista-avaliacoes">
+      <!-- Avaliações serão inseridas aqui -->
+    </div>
+
+    <form id="form-avaliacao">
+      <div class="estrelas-input" id="estrelas"></div>
+      <textarea id="comentario" rows="4" placeholder="Escreva sua avaliação..."></textarea>
+      <button type="submit" class="btn-enviar">Enviar Avaliação</button>
+    </form>
+  </div>
+
+  <script>
+    const produtoId = 'camisa123'; // Simulação de produto
+    const lista = document.getElementById("lista-avaliacoes");
+    const form = document.getElementById("form-avaliacao");
+    const comentario = document.getElementById("comentario");
+    const estrelasDiv = document.getElementById("estrelas");
+    let notaSelecionada = 0;
+
+    const renderEstrelas = (nota) => {
+      estrelasDiv.innerHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.createElement("button");
+        btn.innerHTML = i <= nota ? '★' : '☆';
+        btn.classList.toggle("selected", i <= nota);
+        btn.onclick = (e) => {
+          e.preventDefault();
+          notaSelecionada = i;
+          renderEstrelas(notaSelecionada);
+        };
+        estrelasDiv.appendChild(btn);
+      }
+    };
+
+    const carregarAvaliacoes = () => {
+      const avaliacoes = JSON.parse(localStorage.getItem(`avaliacoes_${produtoId}`)) || [];
+      lista.innerHTML = '';
+      avaliacoes.reverse().forEach(av => {
+        const div = document.createElement("div");
+        div.classList.add("avaliacao");
+        div.innerHTML = `
+          <strong>${av.nome}</strong> <small>- ${new Date(av.data).toLocaleDateString()}</small>
+          <div class="estrelas">${'★'.repeat(av.nota)}${'☆'.repeat(5 - av.nota)}</div>
+          <p>${av.comentario}</p>
+        `;
+        lista.appendChild(div);
+      });
+    };
+
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      if (notaSelecionada === 0 || comentario.value.trim() === '') return;
+
+      const nova = {
+        nome: "Usuário Anônimo",
+        data: new Date(),
+        nota: notaSelecionada,
+        comentario: comentario.value.trim()
+      };
+
+      const avaliacoes = JSON.parse(localStorage.getItem(`avaliacoes_${produtoId}`)) || [];
+      avaliacoes.push(nova);
+      localStorage.setItem(`avaliacoes_${produtoId}`, JSON.stringify(avaliacoes));
+      comentario.value = '';
+      notaSelecionada = 0;
+      renderEstrelas(0);
+      carregarAvaliacoes();
+    };
+
+    renderEstrelas(0);
+    carregarAvaliacoes();
+  </script>
+</body>
+</html>

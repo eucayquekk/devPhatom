@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Compra Concluída</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding: 50px;
+    }
+
+    .caixa {
+      background-color: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: inline-block;
+    }
+
+    h1 {
+      color: #2ecc71;
+    }
+
+    p {
+      font-size: 18px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="caixa">
+    <h1>✅ Compra Recebida com Sucesso!</h1>
+    <p>Em breve você receberá um e-mail com os detalhes do seu pedido.</p>
+    <p>A Loja do Zé agradece pela confiança! 🛒</p>
+  </div>
+
+  <button onclick="enviarEmailTeste()">Testar Envio</button>
+
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script>
+  // Espera carregar o DOM
+  window.addEventListener("DOMContentLoaded", function () {
+    const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+
+    if (carrinho.length > 0) {
+      const novoPedido = {
+        id: "PED" + Date.now(),
+        data: new Date().toLocaleString(),
+        status: "A caminho",
+        itens: carrinho.map(item => ({
+          nome: item.nome,
+          preco: item.preco,
+          imagem: item.imagem,
+          quantidade: item.quantidade,
+          subtotal: item.preco * item.quantidade
+        })),
+        total: carrinho.reduce((acc, item) => acc + (item.preco * item.quantidade), 0),
+        frete: 14.90,
+        pagamento: "Cartão de Crédito"
+      };
+
+      const pedidosAntigos = JSON.parse(localStorage.getItem("pedidosDoUsuario")) || [];
+      pedidosAntigos.push(novoPedido);
+      localStorage.setItem("pedidosDoUsuario", JSON.stringify(pedidosAntigos));
+      localStorage.removeItem("carrinho");
+
+      console.log("✅ Pedido salvo com sucesso:", novoPedido);
+    } else {
+      console.warn("⚠️ Carrinho vazio. Nada foi salvo.");
+    }
+  });
+</script>
+</body>
+</html>

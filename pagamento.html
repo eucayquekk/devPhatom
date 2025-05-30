@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Formas de Pagamento - Loja do Zé</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style> 
+  .resumo-produto {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      margin-bottom: 16px;
+    }
+
+    .resumo-img {
+      width: 64px;
+      height: 64px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-right: 16px;
+    }
+
+    .resumo-detalhes {
+      flex: 1;
+    }
+
+    .resumo-detalhes p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .resumo-qtd {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 6px 0;
+    }
+
+    .btn-mais, .btn-menos {
+      background: #eee;
+      border: none;
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .resumo-subtotal {
+      font-weight: 600;
+      color: #0077cc;
+      font-size: 15px;
+      }
+     .resumo-box-ios {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+      padding: 30px 25px;
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+      margin: 0 auto 30px;
+      transition: all 0.3s ease;
+     }
+.titulo-resumo-ios {
+  color: #007aff;
+  font-size: 20px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.total-box-ios {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 20px;
+  color: #333;
+}
+
+.btn-box-ios {
+  margin-top: 30px;
+}
+.total-box-ios {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 16px;
+  border-top: 1px solid #ddd;
+  padding-top: 12px;
+  color: #000;
+}
+.btn-box-ios button:hover {
+  background-color: #007acc;
+  transition: background 0.3s;
+}
+.pagamento-centralizado {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  text-align: center;
+  color: #007aff;
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+  </style>
+</head>
+<body>
+
+<h1>Formas de Pagamento</h1>
+<div class="pagina-pagamento">
+  <div class="resumo-box-ios">
+  <h2 class="titulo-resumo-ios">Resumo do Pedido</h2>
+  <div id="resumo-itens"></div>
+  <div class="total-box-ios">
+    Total: <span id="resumo-total">R$ 0,00</span>
+  </div>
+  <div id="mercado-pago-btn-container" class="btn-box-ios"></div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const carrinho = JSON.parse(localStorage.getItem("carrinho")) || {};
+    const containerResumo = document.getElementById("resumo-itens");
+    const spanTotal = document.getElementById("resumo-total");
+
+    let total = 0;
+    let html = "";
+
+    if (Object.keys(carrinho).length === 0) {
+      containerResumo.innerHTML = "<p style='text-align:center;'>Seu carrinho está vazio.</p>";
+      spanTotal.textContent = "0.00";
+      return;
+    }
+
+    Object.entries(carrinho).forEach(([chave, item], index) => {
+      const subtotal = parseFloat(item.preco) * item.quantidade;
+      total += subtotal;
+      html += `
+        <div class="resumo-produto">
+          <img src="${item.imagem}" class="resumo-img" alt="${item.nome}">
+          <div class="resumo-detalhes">
+            <p>${item.nome} (${item.tamanho})</p>
+            <div class="resumo-qtd">
+              <button class="btn-menos" onclick="alterarQtd('${chave}', -1)">-</button>
+              <span>${item.quantidade}</span>
+              <button class="btn-mais" onclick="alterarQtd('${chave}', 1)">+</button>
+            </div>
+            <p class="resumo-subtotal">Subtotal: R$ ${subtotal.toFixed(2)}</p>
+          </div>
+        </div>`;
+    });
+
+    const frete = 14.90;
+    total += frete;
+    containerResumo.innerHTML = html;
+    spanTotal.textContent = total.toFixed(2);
+  });
+
+  function alterarQtd(chave, delta) {
+    const carrinho = JSON.parse(localStorage.getItem("carrinho")) || {};
+    if (carrinho[chave]) {
+      carrinho[chave].quantidade += delta;
+      if (carrinho[chave].quantidade <= 0) {
+        delete carrinho[chave];
+      }
+      localStorage.setItem("carrinho", JSON.stringify(carrinho));
+      location.reload();
+    }
+  }
+</script>
+
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<script>
+  const mp = new MercadoPago('TEST-a94af084-1db7-4146-87f1-bc8003528148');
+
+  async function gerarPreferencia() {
+    const carrinho = JSON.parse(localStorage.getItem("carrinho")) || {};
+    const itens = [];
+    let totalFrete = 14.90;
+
+    for (const chave in carrinho) {
+      const item = carrinho[chave];
+      itens.push({
+        title: `${item.nome} (${item.tamanho})`,
+        quantity: item.quantidade,
+        unit_price: parseFloat(item.preco)
+      });
+    }
+
+    itens.push({
+      title: "Frete",
+      quantity: 1,
+      unit_price: totalFrete
+    });
+
+    const resposta = await fetch("https://api.mercadopago.com/checkout/preferences", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer TEST-5139191559209558-051122-2bcc52279cd5e3cf9844ea7b12fb9e51-1177878793",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        items: itens,
+        back_urls: {
+          success: "https://www.sualoja.com/sucesso.html",
+          failure: "https://www.sualoja.com/falha.html",
+          pending: "https://www.sualoja.com/pendente.html"
+        },
+        auto_return: "approved"
+      })
+    });
+
+    const dados = await resposta.json();
+
+    mp.checkout({
+      preference: {
+        id: dados.id
+      },
+      autoOpen: true
+    });
+  }
+
+  const botao = document.createElement("button");
+  botao.textContent = "Finalizar e Pagar com Mercado Pago";
+  botao.style = "padding: 14px 28px; font-size: 17px; background-color: #009ee3; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.1)";
+  botao.onclick = () => {
+  salvarPedidoReal();
+  gerarPreferencia();
+};
+
+  document.getElementById("mercado-pago-btn-container").appendChild(botao);
+
+  function salvarPedidoReal() {
+  const carrinho = JSON.parse(localStorage.getItem("carrinho")) || {};
+  if (Object.keys(carrinho).length === 0) return;
+
+  const pedidosAtuais = JSON.parse(localStorage.getItem("pedidosZé") || "[]");
+  const novosPedidos = [];
+
+  Object.entries(carrinho).forEach(([id, item], i) => {
+    novosPedidos.push({
+      id: `ZÉ-${Date.now()}-${i + 1}`,
+      produto: item.nome,
+      imagem: item.imagem,
+      tamanho: item.tamanho,
+      statusIndex: 0,
+      data: new Date().toLocaleString()
+    });
+  });
+
+  localStorage.setItem("pedidosZé", JSON.stringify([...pedidosAtuais, ...novosPedidos]));
+  localStorage.removeItem("carrinho");
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detalhes do Produto - Loja do Zé</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .avaliacao-ios {
+      background: #fff;
+      border-radius: 14px;
+      padding: 10px 16px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+      border: 1px solid #ddd;
+      text-align: center;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 24px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .avaliacao-ios:hover {
+      box-shadow: 0 6px 20px rgba(0, 122, 255, 0.12);
+      border-color: #007aff;
+      background-color: #f9f9ff;
+    }
+    #modalAdicionado.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+#modalAdicionado .modal-box {
+  background: #fff;
+  padding: 25px;
+  border-radius: 18px;
+  text-align: center;
+  max-width: 90%;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  animation: aparecer 0.3s ease;
+}
+
+#modalAdicionado h3 {
+  font-size: 20px;
+  color: #1c1c1e;
+  margin-bottom: 10px;
+}
+
+#modalAdicionado p {
+  font-size: 16px;
+  color: #3a3a3c;
+  margin-bottom: 20px;
+}
+
+#modalAdicionado button {
+  padding: 10px 18px;
+  background: #007aff;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+#modalAdicionado button:hover {
+  transform: scale(1.05);
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+  </style>
+</head>
+<body>
+  <div class="pagina-produto" data-produto-id="">
+    <!-- Imagem e título -->
+    <img id="imagem-produto" src="" alt="Imagem do produto">
+    <h1 id="nome-produto">Nome do Produto</h1>
+    <p class="preco" id="preco-produto">R$ 00,00</p>
+
+    <!-- Tamanhos -->
+    <div class="tamanhos">
+      <span onclick="selecionarTamanho(this)">P</span>
+      <span onclick="selecionarTamanho(this)">M</span>
+      <span onclick="selecionarTamanho(this)">G</span>
+      <span onclick="selecionarTamanho(this)">GG</span>
+    </div>
+
+    <!-- Descrição -->
+    <p class="descricao">
+      Camisa feita com tecido leve e confortável, ideal pra treino ou rolê. Estilo garantido com a estampa exclusiva da Loja do Zé 💥
+    </p>
+<!-- Características -->
+<div class="caixa-destaque">
+  <h3>✨ Características do Produto</h3>
+  <ul>
+    <li><i class="fa-solid fa-check-circle"></i> Tecido 100% algodão premium</li>
+    <li><i class="fa-solid fa-star"></i> Estampa exclusiva Loja do Zé</li>
+    <li><i class="fa-solid fa-dumbbell"></i> Costura reforçada para treinos pesados</li>
+    <li><i class="fa-solid fa-shirt"></i> Caimento ideal no corpo</li>
+  </ul>
+</div>
+
+<!-- Detalhes Técnicos -->
+<div class="caixa-destaque">
+  <h3>🛠️ Detalhes Técnicos</h3>
+  <table>
+    <tr><td>Marca:</td><td>Loja do Zé</td></tr>
+    <tr><td>Material:</td><td>Algodão</td></tr>
+    <tr><td>Gênero:</td><td>Unissex</td></tr>
+    <tr><td>Tipo de Estampa:</td><td>Silk Screen</td></tr>
+    <tr><td>Origem:</td><td>Brasil</td></tr>
+  </table>
+</div>
+    <!-- Botões de ação -->
+    <div class="botoes-produto">
+      <button onclick="adicionarAoCarrinho()">Adicionar ao Carrinho</button>
+      <button onclick="comprarAgora()">Comprar Agora</button>
+    </div>
+
+    <!-- Avaliação Dinâmica em Tempo Real -->
+    <div class="avaliacao-ios" id="avaliacao-dinamica" onclick="irParaAvaliacoes()"></div>
+
+    <div class="toast" id="toast" style="display: none;">✔️ Produto adicionado com sucesso!</div>
+
+    <!-- Produtos relacionados -->
+    <section class="produtos-relacionados">
+      <h2>🛍️ Você também pode gostar</h2>
+      <div class="relacionados">
+        <div class="produto">
+          <img src="produto.jpg" alt="Produto Relacionado">
+          <p>Regata Treino</p>
+          <span>R$ 39,90</span>
+        </div>
+        <div class="produto">
+          <img src="produto.jpg" alt="Produto Relacionado">
+          <p>Camisa Oversized</p>
+          <span>R$ 69,90</span>
+        </div>
+      </div>
+    </section>
+  </div>
+  <!-- Modal Produto Adicionado -->
+<div id="modalAdicionado" class="modal-overlay">
+  <div class="modal-box">
+    <h3>✅ Produto adicionado ao carrinho!</h3>
+    <p id="nomeProdutoAdicionado">Regata Treino (M)</p>
+    <div style="display: flex; gap: 10px; justify-content: center;">
+      <button onclick="irCarrinho()">Ver Carrinho</button>
+      <button onclick="fecharModalAdicionado()">Continuar Comprando</button>
+    </div>
+  </div>
+</div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const produto = JSON.parse(localStorage.getItem('produtoSelecionado'));
+      if (produto) {
+        document.getElementById('imagem-produto').src = produto.imagem;
+        document.getElementById('imagem-produto').alt = produto.nome;
+        document.getElementById('nome-produto').textContent = produto.nome;
+        document.getElementById('preco-produto').textContent = `R$ ${produto.preco}`;
+        document.querySelector('.pagina-produto').dataset.produtoId = produto.nome.toLowerCase().replace(/\s+/g, '-');
+        calcularMediaAvaliacoes();
+      } else {
+        document.querySelector('.pagina-produto').innerHTML = "<p style='color: red;'>Nenhum produto selecionado!</p>";
+      }
+    });
+
+    function selecionarTamanho(elemento) {
+      const tamanhos = document.querySelectorAll('.tamanhos span');
+      tamanhos.forEach(el => el.classList.remove('selecionado'));
+      elemento.classList.add('selecionado');
+    }
+
+    function getTamanhoSelecionado() {
+      const selecionado = document.querySelector('.tamanhos .selecionado');
+      return selecionado ? selecionado.textContent : null;
+    }
+
+    function adicionarAoCarrinho(saltarParaCarrinho = false) {
+      const produto = JSON.parse(localStorage.getItem('produtoSelecionado'));
+      const tamanho = getTamanhoSelecionado();
+
+      if (!produto) {
+        alert("Erro ao carregar produto.");
+        return;
+      }
+      if (!tamanho) {
+        alert("Por favor, selecione um tamanho.");
+        return;
+      }
+      const chave = `${produto.nome} - Tam: ${tamanho}`;
+      const carrinho = JSON.parse(localStorage.getItem('carrinho')) || {};
+
+      if (carrinho[chave]) {
+        carrinho[chave].quantidade += 1;
+      } else {
+        carrinho[chave] = {
+          nome: produto.nome,
+          preco: produto.preco,
+          imagem: produto.imagem,
+          tamanho: tamanho,
+          quantidade: 1
+        };
+      }
+
+      localStorage.setItem('carrinho', JSON.stringify(carrinho));
+      atualizarContadorCarrinho();
+
+      mostrarToast("🛒 Produto adicionado ao carrinho!");
+
+      if (saltarParaCarrinho) {
+        window.location.href = 'carrinho.html';
+      } else {
+        document.getElementById("nomeProdutoAdicionado").textContent = `${produto.nome} (${tamanho})`;
+document.getElementById("modalAdicionado").style.display = "flex";
+      }
+    }
+
+    function comprarAgora() {
+  const logado = localStorage.getItem("usuarioLogado");
+
+  // Salva intenção de compra, caso precise logar primeiro
+  sessionStorage.setItem("redirecionarPosLogin", "carrinho");
+
+  if (!logado) {
+    window.location.href = "login.html?precisaLogin=true";
+  } else {
+    adicionarAoCarrinho(true);
+  }
+}
+
+    function atualizarContadorCarrinho() {
+      const contador = document.getElementById('contador-carrinho');
+      const carrinho = JSON.parse(localStorage.getItem('carrinho')) || {};
+      let total = 0;
+      for (const item in carrinho) {
+        total += carrinho[item].quantidade;
+      }
+      if (contador) contador.textContent = total;
+    }
+
+    function mostrarToast(mensagem) {
+      const toast = document.getElementById("toast");
+      toast.textContent = mensagem;
+      toast.style.display = "block";
+      toast.classList.remove("esconder");
+
+      setTimeout(() => {
+        toast.classList.add("esconder");
+      }, 3000);
+    }
+
+    function irParaAvaliacoes() {
+      const produtoId = document.querySelector('.pagina-produto').dataset.produtoId;
+      window.location.href = `avaliacoes.html?produto=${produtoId}`;
+    }
+
+    function calcularMediaAvaliacoes() {
+      const produtoId = document.querySelector('.pagina-produto').dataset.produtoId;
+      const avaliacoes = JSON.parse(localStorage.getItem(`avaliacoes_${produtoId}`)) || [];
+      const container = document.getElementById('avaliacao-dinamica');
+
+      if (avaliacoes.length === 0) {
+        container.innerHTML = `<p style="color: #888;">Nenhuma avaliação ainda</p>`;
+        return;
+      }
+
+      const total = avaliacoes.length;
+      const soma = avaliacoes.reduce((acc, av) => acc + av.nota, 0);
+      const media = soma / total;
+
+      const estrelasInteiras = Math.floor(media);
+      const temMeia = media % 1 >= 0.5;
+
+      let estrelasHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        if (i <= estrelasInteiras) {
+          estrelasHTML += '⭐';
+        } else if (temMeia && i === estrelasInteiras + 1) {
+          estrelasHTML += '☆';
+        } else {
+          estrelasHTML += '☆';
+        }
+      }
+
+      container.innerHTML = `<p>${estrelasHTML} (${total} avaliação${total > 1 ? 's' : ''})</p>`;
+    }
+
+    atualizarContadorCarrinho();
+
+function fecharModalAdicionado() {
+  document.getElementById("modalAdicionado").style.display = "none";
+}
+
+function irCarrinho() {
+  window.location.href = "carrinho.html";
+}
+  </script>
+</body>
+</html>

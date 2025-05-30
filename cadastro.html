@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Criar Conta - Loja do Zé</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f2f2f7;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #007aff;
+      font-size: 22px;
+      margin-bottom: 25px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      font-size: 16px;
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      border-color: #007aff;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      background-color: #007aff;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #005ecb;
+    }
+    .input-group {
+  display: flex;
+  align-items: center;
+  background: #f1f1f1;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  border: 1px solid #ccc;
+}
+
+.input-group i {
+  color: #8e8e93;
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.input-group input {
+  border: none;
+  outline: none;
+  font-size: 16px;
+  width: 100%;
+  background: transparent;
+}
+
+.senha-group {
+  position: relative;
+}
+
+.toggle-senha {
+  position: absolute;
+  right: 14px;
+  cursor: pointer;
+  color: #8e8e93;
+}
+/* Alerta estilo iOS com fundo escurecido */
+.alerta-ios {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4); /* fundo escuro */
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.conteudo-alerta-ios {
+  background: #ffffff;
+  padding: 25px 20px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 320px;
+  animation: aparecer 0.3s ease;
+}
+
+.conteudo-alerta-ios p {
+  font-size: 16px;
+  color: #1c1c1e;
+  margin-bottom: 20px;
+}
+
+.conteudo-alerta-ios button {
+  padding: 10px 20px;
+  background: #007aff;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@keyframes aparecer {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+  </style>
+</head>
+<body>
+ <form class="container"
+      autocomplete="off"
+      autocorrect="off"
+      spellcheck="false"
+      aria-autocomplete="none"
+      onsubmit="event.preventDefault(); salvarCadastro();">
+
+  <h1>Criar Conta na Loja do Zé</h1>
+
+  <div class="input-group">
+    <i class="fas fa-user"></i>
+    <input type="text"
+           id="nome"
+           placeholder="Nome completo"
+           autocomplete="off"
+           readonly
+           onfocus="this.removeAttribute('readonly')">
+  </div>
+
+  <div class="input-group">
+    <i class="fas fa-envelope"></i>
+    <input type="email"
+           id="email"
+           placeholder="Seu e-mail"
+           autocomplete="off"
+           readonly
+           onfocus="this.removeAttribute('readonly')">
+  </div>
+
+  <div class="input-group">
+    <i class="fas fa-phone"></i>
+    <input type="tel"
+           id="telefone"
+           placeholder="Telefone"
+           autocomplete="off"
+           readonly
+           onfocus="this.removeAttribute('readonly')">
+  </div>
+
+  <div class="input-group">
+    <i class="fas fa-map-marker-alt"></i>
+    <input type="text"
+           id="entradaEndereco"
+           name="inputEndereco"
+           placeholder="Digite seu endereço completo"
+           autocomplete="off"
+           readonly
+           onfocus="this.removeAttribute('readonly')">
+  </div>
+
+  <div class="input-group">
+    <i class="fas fa-calendar-alt"></i>
+    <input type="date"
+           id="nascimento"
+           placeholder="Data de nascimento"
+           autocomplete="off"
+           readonly
+           onfocus="this.removeAttribute('readonly')">
+  </div>
+
+  <div class="input-group senha-group">
+  <i class="fas fa-lock"></i>
+  <input type="password"
+         id="senha"
+         placeholder="Sua senha"
+         autocomplete="new-password"
+         readonly
+         onfocus="this.removeAttribute('readonly')">
+  <i class="fas fa-eye toggle-senha" onclick="toggleSenha()" id="icone-senha"></i>
+</div>
+
+  <button type="submit">Cadastrar</button>
+</form>
+
+<!-- ALERTA iOS FORA DA <form> -->
+<div id="alerta-ios" class="alerta-ios">
+  <div class="conteudo-alerta-ios">
+    <p id="mensagem-alerta"></p>
+    <button type="button" onclick="fecharAlertaIOS()">OK</button>
+  </div>
+</div>
+
+<script>
+ function salvarCadastro() {
+  const nome = document.getElementById('nome').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const telefone = document.getElementById('telefone').value.trim();
+const endereco = document.getElementById('entradaEndereco').value.trim();
+const nascimento = document.getElementById("nascimento").value.trim();  
+const senha = document.getElementById('senha').value.trim();
+
+  if (!nome || !email || !telefone || !endereco || !nascimento || !senha) {
+    exibirAlertaIOS("Preencha todos os campos!");
+    return; // ⛔ EVITA continuar
+  }
+
+  // Salvar dados do usuário
+  localStorage.setItem('nomeUsuario', nome);
+  localStorage.setItem('emailUsuario', email);
+  localStorage.setItem('telefoneUsuario', telefone);
+localStorage.setItem('enderecoUsuario', endereco);
+  localStorage.setItem('dataNascimentoUsuario', nascimento);
+  localStorage.setItem('senhaUsuario', senha);
+  localStorage.setItem("usuarioLogado", email);
+
+  const redir = sessionStorage.getItem("redirecionarPosLogin");
+  exibirAlertaIOS("Cadastro realizado com sucesso!", redir === "carrinho" ? "carrinho.html" : "index.html");
+}
+
+  function exibirAlertaIOS(mensagem, redirecionar = null) {
+  document.getElementById("mensagem-alerta").textContent = mensagem;
+  document.getElementById("alerta-ios").style.display = "flex";
+
+  if (redirecionar) {
+    // Sinaliza que o alerta foi exibido
+    sessionStorage.setItem("alertaExibido", "true");
+    sessionStorage.setItem("proximoDestino", redirecionar);
+  }
+}
+
+function fecharAlertaIOS() {
+  document.getElementById("alerta-ios").style.display = "none";
+
+  const deveIr = sessionStorage.getItem("alertaExibido");
+  const destino = sessionStorage.getItem("proximoDestino");
+
+  if (deveIr && destino) {
+    sessionStorage.removeItem("alertaExibido");
+    sessionStorage.removeItem("proximoDestino");
+    window.location.href = destino;
+  }
+}
+
+  function toggleSenha() {
+    const inputSenha = document.getElementById("senha");
+    const icone = document.getElementById("icone-senha");
+
+    if (inputSenha.type === "password") {
+      inputSenha.type = "text";
+      icone.classList.remove("fa-eye");
+      icone.classList.add("fa-eye-slash");
+    } else {
+      inputSenha.type = "password";
+      icone.classList.remove("fa-eye-slash");
+      icone.classList.add("fa-eye");
+    }
+  }
+</script>
+</body>
+</html>

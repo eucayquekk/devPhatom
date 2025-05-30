@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil do Usuário - Loja do Zé</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f2f2f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    .perfil {
+      max-width: 460px;
+      margin: 40px auto;
+      background-color: #fff;
+      padding: 30px 20px;
+      border-radius: 24px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+      text-align: center;
+    }
+
+    .foto-perfil {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
+      margin-bottom: 12px;
+    }
+
+    .botao-trocar-foto, .perfil button {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .botao-trocar-foto {
+      background-color: #007aff;
+      color: white;
+    }
+
+    .botao-trocar-foto:hover {
+      background-color: #005ecb;
+    }
+
+    .perfil button {
+      background-color: #34c759;
+      color: white;
+    }
+
+    .perfil button:hover {
+      background-color: #28a745;
+    }
+
+    .perfil h1 {
+      font-size: 24px;
+      color: #1c1c1e;
+      margin-bottom: 4px;
+    }
+
+    .perfil h2 {
+      font-size: 16px;
+      color: #8e8e93;
+      margin-top: 0;
+    }
+
+    .info {
+      text-align: left;
+      margin-top: 20px;
+      color: #444;
+    }
+
+    .info p {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    .secao-opcoes {
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    .secao-opcoes h3 {
+      font-size: 18px;
+      color: #007aff;
+      margin-bottom: 12px;
+    }
+
+    .opcao {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-radius: 14px;
+      background: #f9f9f9;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .opcao:hover {
+      background: #e5f0ff;
+    }
+
+    .opcao i {
+      font-size: 18px;
+      color: #007aff;
+      margin-right: 12px;
+      width: 22px;
+    }
+
+    .modal-alerta {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .conteudo-alerta {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 400px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+
+    .btn-login-direto {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #007aff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+    }
+  /* MODAL iOS BASE */
+#modal-editar {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease;
+}
+
+/* CONTEÚDO DO MODAL */
+#modal-editar .conteudo-alerta {
+  background: #ffffff;
+  padding: 30px 24px;
+  border-radius: 24px;
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.15);
+  animation: popIn 0.3s ease;
+}
+
+/* TÍTULO */
+#modal-editar h2 {
+  font-size: 20px;
+  color: #1c1c1e;
+  margin-bottom: 20px;
+}
+
+/* INPUT WRAPPER COM ÍCONE */
+#modal-editar .campo-input {
+  display: flex;
+  align-items: center;
+  background: #f2f2f7;
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 1px solid #d1d1d6;
+  transition: border-color 0.2s;
+}
+
+#modal-editar .campo-input i {
+  margin-right: 10px;
+  font-size: 16px;
+  color: #8e8e93;
+}
+
+#modal-editar input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 16px;
+  width: 100%;
+  color: #1c1c1e;
+}
+
+/* BOTÃO SALVAR */
+#modal-editar button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 14px;
+  background-color: #007aff;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: background-color 0.2s, transform 0.15s ease;
+}
+
+#modal-editar button:hover {
+  background-color: #005ecb;
+  transform: scale(1.02);
+}
+
+/* BOTÃO CANCELAR */
+#modal-editar button:last-of-type {
+  background-color: #e5e5ea;
+  color: #1c1c1e;
+  margin-top: 10px;
+}
+
+/* ANIMAÇÕES */
+@keyframes fadeIn {
+  from { opacity: 0; } 
+  to   { opacity: 1; }
+}
+
+@keyframes popIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+  </style>
+</head>
+<body>
+
+  <!-- CONTEÚDO DO PERFIL -->
+  <div class="perfil" id="conteudo-perfil">
+   <img src="perfil.png" alt="Foto de Perfil" class="foto-perfil">
+    <h2 id="nomePerfil"></h2>
+    <h2>Bem-vindo, <span id="nome-usuario"></span>!</h2>
+
+    <div class="info">
+     <p><strong>Email:</strong> <span id="email-usuario"></span></p>
+<p><strong>Telefone:</strong> <span id="telefone-usuario"></span></p>
+<p><strong>Endereço:</strong> <span id="endereco-usuario"></span></p>
+<p><strong>Data de nascimento:</strong> <span id="nascimento-usuario"></span></p>
+    </div>
+
+    <input type="file" id="foto" style="display: none;">
+    <label for="foto" class="botao-trocar-foto">Trocar Foto</label>
+   <button onclick="abrirEditar()">Editar Informações</button>
+
+    <div class="secao-opcoes">
+      <h3>Minha Conta</h3>
+      <div class="opcao" onclick="window.location.href='pedidos.html'">
+        <i class="fas fa-box"></i> Meus Pedidos
+      </div>
+      <div class="opcao" onclick="window.location.href='favoritos.html'">
+        <i class="fas fa-heart"></i> Meus Favoritos
+      </div>
+      <div class="opcao" onclick="window.location.href='enderecos.html'">
+        <i class="fas fa-map-marker-alt"></i> Endereços
+      </div>
+      <div class="opcao" onclick="window.location.href='configuracoes.html'">
+        <i class="fas fa-cog"></i> Configurações
+      </div>
+      <div class="opcao" onclick="sairDaConta()">
+        <i class="fas fa-sign-out-alt"></i> Sair
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE ALERTA PARA QUEM NÃO ESTÁ LOGADO -->
+  <div class="modal-alerta" id="modal-alerta">
+    <div class="conteudo-alerta">
+      <h2>🔐 Acesso Restrito</h2>
+      <p>Você precisa estar logado para acessar esta página.</p>
+      <a href="login.html" class="btn-login-direto">Fazer Login</a>
+    </div>
+  </div>
+
+  <!-- MODAL DE EDIÇÃO -->
+<div class="modal-alerta" id="modal-editar">
+  <div class="conteudo-alerta">
+    <h2>Editar Informações</h2>
+
+    <div class="campo-input">
+      <i class="fas fa-user"></i>
+      <input type="text" id="editar-nome" placeholder="Nome completo">
+    </div>
+
+    <div class="campo-input">
+      <i class="fas fa-envelope"></i>
+      <input type="email" id="editar-email" placeholder="E-mail">
+    </div>
+
+    <div class="campo-input">
+      <i class="fas fa-phone"></i>
+      <input type="tel" id="editar-telefone" placeholder="Telefone">
+    </div>
+
+    <div class="campo-input">
+      <i class="fas fa-map-marker-alt"></i>
+      <input type="text" id="editar-endereco" placeholder="Endereço">
+    </div>
+
+    <div class="campo-input">
+      <i class="fas fa-calendar-alt"></i>
+      <input type="date" id="editar-nascimento" placeholder="Data de nascimento">
+    </div>
+
+    <button onclick="salvarEdicao()">Salvar</button>
+    <button onclick="fecharEditar()">Cancelar</button>
+  </div>
+</div>
+  <!-- SCRIPT FINAL -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const logado = localStorage.getItem("usuarioLogado");
+
+      if (!logado) {
+      document.getElementById("conteudo-perfil").style.display = "none";
+      document.getElementById("modal-alerta").style.display = "flex";
+    } else {
+      const email = localStorage.getItem("emailUsuario") || "Não informado";
+      const telefone = localStorage.getItem("telefoneUsuario") || "Não informado";
+      const endereco = localStorage.getItem("enderecoUsuario") || "Endereço não cadastrado";
+      const nascimento = localStorage.getItem("dataNascimentoUsuario") || "Não informado";
+      const nome = localStorage.getItem("nomeUsuario") || "Usuário";
+
+      document.getElementById("email-usuario").textContent = email;
+      document.getElementById("telefone-usuario").textContent = telefone;
+      document.getElementById("endereco-usuario").textContent = endereco;
+      document.getElementById("nascimento-usuario").textContent = nascimento;
+      document.getElementById("nome-usuario").textContent = nome;
+    }
+      window.sairDaConta = function () {
+        localStorage.removeItem("usuarioLogado");
+        localStorage.removeItem("nomeUsuario");
+        localStorage.removeItem("emailUsuario");
+        localStorage.removeItem("telefoneUsuario");
+        localStorage.removeItem("enderecoUsuario");
+        localStorage.removeItem("nascimentoUsuario");
+        window.location.href = "login.html";
+      };
+    });
+
+    function abrirEditar() {
+    document.getElementById("editar-nome").value = localStorage.getItem("nomeUsuario") || "";
+    document.getElementById("editar-email").value = localStorage.getItem("emailUsuario") || "";
+    document.getElementById("editar-telefone").value = localStorage.getItem("telefoneUsuario") || "";
+    document.getElementById("editar-endereco").value = localStorage.getItem("enderecoUsuario") || "";
+    document.getElementById("editar-nascimento").value = localStorage.getItem("dataNascimentoUsuario") || "";
+    document.getElementById("modal-editar").style.display = "flex";
+  }
+
+  function fecharEditar() {
+    document.getElementById("modal-editar").style.display = "none";
+  }
+
+  function salvarEdicao() {
+    localStorage.setItem("nomeUsuario", document.getElementById("editar-nome").value);
+    localStorage.setItem("emailUsuario", document.getElementById("editar-email").value);
+    localStorage.setItem("telefoneUsuario", document.getElementById("editar-telefone").value);
+    localStorage.setItem("enderecoUsuario", document.getElementById("editar-endereco").value);
+    localStorage.setItem("dataNascimentoUsuario", document.getElementById("editar-nascimento").value);
+    fecharEditar();
+    location.reload(); // atualiza a página pra mostrar os novos dados
+  }
+  </script>
+</body>
+</html>

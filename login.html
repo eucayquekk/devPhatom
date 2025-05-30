@@ -1,0 +1,234 @@
+<!DOCTYPE html><!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Loja do Zé</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(120deg, #e0f7fa, #ffffff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background-color: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .login-container h1 {
+      margin-bottom: 30px;
+      font-size: 28px;
+      color: #008CBA;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+  .input-group input {
+  width: 100%;
+  padding: 12px 40px 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* sombra suave */
+  transition: box-shadow 0.3s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 140, 186, 0.3); /* destaque no foco */
+}
+.input-group i {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #008CBA;
+}
+
+.login-container button {
+  background-color: #008CBA;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 15px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.login-container button:hover {
+  background-color: #005f73;
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+  .login-container p a {
+  color: #66b2ff;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.login-container p a:hover {
+  color: #005f73;
+}
+
+.login-container p a:hover {
+  color: #023e8a;
+}
+
+    @media (max-width: 480px) {
+      .login-container {
+        margin: 20px;
+        padding: 30px 20px;
+      }
+    } 
+    .mensagem-alerta {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 15px;
+  max-width: 400px;
+  width: 100%;
+}
+.login-container {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.mensagem-erro {
+  color: #e63946;
+  font-size: 14px;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.mensagem-erro a {
+  color: #e63946;
+  text-decoration: underline;
+}
+
+  </style>
+</head>
+<body>
+
+  <div class="pagina-login">
+
+    <!-- ⚠️ Alerta de acesso -->
+    <div id="mensagem-alerta" class="mensagem-alerta" style="display: none;">
+      ⚠️ Identificamos que você ainda não tem conta na Loja do Zé.<br>
+      Faça login ou cadastre-se para continuar com a compra.
+    </div>
+  
+    <!-- 🧾 Container do formulário -->
+    <div class="login-container">
+  
+      <!-- ⚠️ Mensagem de erro de e-mail -->
+      <p id="mensagem-erro" class="mensagem-erro" style="display: none;">
+        ⚠️ E-mail não encontrado. Você já tem uma conta?
+        <a href="cadastro.html">Criar conta</a>
+      </p>
+  
+      <h1>Entrar na Loja do Zé</h1>
+  
+      <div class="input-group">
+        <input type="email" id="email" placeholder="Seu e-mail" autocomplete="off">
+        <i class="fas fa-envelope"></i>
+      </div>
+  
+      <div class="input-group">
+       <input type="password" id="senha" placeholder="Sua senha" autocomplete="new-password">
+        <i class="fas fa-lock"></i>
+      </div>
+  
+      <button onclick="fazerLogin()">Entrar</button>
+  
+      <p>Esqueceu a senha? <a href="#">Recuperar</a></p>
+      <p>Não tem uma conta? <a href="cadastro.html">Cadastre-se aqui</a></p>
+    </div>
+  </div>
+  
+ <script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('precisaLogin') === 'true') {
+      document.getElementById('mensagem-alerta').style.display = 'block';
+    }
+  });
+
+  function fazerLogin() {
+    const email = document.getElementById('email').value.trim();
+    const senha = document.getElementById('senha').value.trim();
+
+    const msgErro = document.getElementById("mensagem-erro");
+
+    if (!email || !senha) {
+      msgErro.textContent = "⚠️ Preencha todos os campos!";
+      msgErro.style.display = "block";
+      return;
+    }
+
+    const usuariosCadastrados = ["ze@lojadoze.com", "cliente@exemplo.com"];
+
+    if (!usuariosCadastrados.includes(email)) {
+      msgErro.textContent = "⚠️ E-mail não encontrado. Você já tem uma conta?";
+      msgErro.style.display = "block";
+      return;
+    }
+
+    // Login válido
+    localStorage.setItem("usuarioLogado", email); // troquei de "true" pra salvar o email real
+    localStorage.setItem("nomeUsuario", email.split("@")[0]);
+
+    const msg = document.getElementById("mensagem-login");
+    msg.style.display = "block";
+
+    // REDIRECIONAMENTO INTELIGENTE
+    const redir = sessionStorage.getItem("redirecionarPosLogin");
+
+    setTimeout(() => {
+      if (redir === "carrinho") {
+        sessionStorage.removeItem("redirecionarPosLogin");
+        window.location.href = "carrinho.html";
+      } else {
+        window.location.href = "index.html"; // ou "perfil.html" se quiser manter
+      }
+    }, 2000);
+  }
+   window.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("email").value = "";
+    document.getElementById("senha").value = "";
+  });
+</script>
+

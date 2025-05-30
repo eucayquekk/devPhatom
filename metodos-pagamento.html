@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Métodos de Pagamento - Loja do Zé</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f2f2f7;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 420px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 24px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+    }
+
+    h1 {
+      color: #007aff;
+      font-size: 22px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .metodo {
+      display: flex;
+      align-items: center;
+      padding: 14px;
+      border-radius: 14px;
+      background: #f9f9f9;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      font-size: 15px;
+      color: #1c1c1e;
+    }
+
+    .metodo i {
+      font-size: 20px;
+      margin-right: 12px;
+      color: #007aff;
+    }
+
+    .ultimo-uso {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .icone {
+      width: 22px;
+      margin-right: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Métodos de Pagamento</h1>
+    <div class="ultimo-uso" id="ultimoMetodo">Carregando último método usado...</div>
+
+    <div class="metodo"><img src="https://logodownload.org/wp-content/uploads/2019/06/pix-logo-1.png" class="icone"/> PIX via Mercado Pago</div>
+    <div class="metodo"><img src="https://img.icons8.com/color/48/000000/credit-card-front.png" class="icone"/> Cartão de Crédito</div>
+    <div class="metodo"><img src="https://cdn-icons-png.flaticon.com/512/123/123392.png" class="icone"/> Boleto Bancário</div>
+    <div class="metodo"><img src="https://cdn-icons-png.flaticon.com/512/109/109678.png" class="icone"/> Cartão Débito Virtual Caixa</div>
+  </div>
+
+  <script>
+    const metodoSalvo = localStorage.getItem("metodoPagamentoZé") || "Nenhum método registrado ainda.";
+    document.getElementById("ultimoMetodo").textContent = "Último método usado: " + metodoSalvo;
+  </script>
+</body>
+</html>

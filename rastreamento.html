@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Rastreamento de Pedidos - Loja do Zé</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f2f2f7;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #007aff;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .pedido {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .pedido h2 {
+      font-size: 16px;
+      margin-bottom: 8px;
+      color: #1c1c1e;
+    }
+
+    .produto {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .timeline {
+      position: relative;
+      margin-top: 12px;
+      padding-left: 20px;
+      border-left: 2px solid #d1d1d6;
+    }
+
+    .etapa {
+      position: relative;
+      padding: 6px 0 6px 12px;
+      font-size: 14px;
+    }
+
+    .etapa::before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 8px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .etapa.finalizada {
+      color: #4cd964;
+    }
+
+    .etapa.finalizada::before {
+      background: #4cd964;
+    }
+
+    .etapa.atual {
+      color: #007aff;
+      font-weight: 600;
+    }
+
+    .etapa.atual::before {
+      background: #007aff;
+    }
+
+    .etapa.futura {
+      color: #aaa;
+    }
+
+    .etapa.futura::before {
+      background: #d1d1d6;
+    }
+
+    .vazio {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+      margin-top: 80px;
+    }
+
+    .vazio p {
+      color: #666;
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+
+    .vazio a {
+      display: inline-block;
+      margin-top: 10px;
+      text-decoration: none;
+      color: white;
+      background: #007aff;
+      padding: 10px 20px;
+      border-radius: 16px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .vazio a:hover {
+      background: #0060d1;
+    }
+  </style>
+</head>
+<body>
+
+<h1>📦 Rastreamento de Pedidos</h1>
+<div id="listaPedidos"></div>
+
+<script>
+  const statusEtapas = ["Pedido recebido", "Separando", "Enviado", "Saiu para entrega", "Entregue"];
+
+  function renderPedidos() {
+  const container = document.getElementById("listaPedidos");
+  const pedidosBrutos = JSON.parse(localStorage.getItem("pedidosZé") || "[]");
+
+  // 🔒 Filtro contra pedidos falsos
+  const pedidos = pedidosBrutos.filter(p => {
+    const nome = p.produto.toLowerCase();
+    return !nome.includes("camisa loja do zé") && !nome.includes("tênis ultrazé");
+  });
+
+  container.innerHTML = "";
+
+  if (pedidos.length === 0) {
+    container.innerHTML = `
+      <div class="vazio">
+        <div style="font-size: 42px;">🛒</div>
+        <p>Você ainda não fez nenhum pedido.</p>
+        <a href="index.html">Ver produtos</a>
+      </div>
+    `;
+    return;
+  }
+
+  pedidos.forEach(pedido => {
+    const etapas = statusEtapas.map((etapa, i) => {
+      let classe = "";
+      if (i < pedido.statusIndex) classe = "finalizada";
+      else if (i === pedido.statusIndex) classe = "atual";
+      else classe = "futura";
+
+      return `<div class="etapa ${classe}">${etapa}</div>`;
+    }).join("");
+
+    container.innerHTML += `
+      <div class="pedido">
+        <h2>Pedido: ${pedido.id}</h2>
+        <div class="produto">Produto: ${pedido.produto}</div>
+        <div class="produto">Data: ${pedido.data}</div>
+        <div class="timeline">${etapas}</div>
+      </div>
+    `;
+  });
+}
+
+  function atualizarStatus() {
+    const pedidos = JSON.parse(localStorage.getItem("pedidosZé") || "[]");
+    let atualizou = false;
+
+    const atualizados = pedidos.map(pedido => {
+      if (pedido.statusIndex < statusEtapas.length - 1) {
+        pedido.statusIndex++;
+        atualizou = true;
+      }
+      return pedido;
+    });
+
+    if (atualizou) {
+      localStorage.setItem("pedidosZé", JSON.stringify(atualizados));
+      renderPedidos();
+    }
+  }
+
+  renderPedidos();
+  setInterval(atualizarStatus, 10000); // Atualiza a cada 10s
+</script>
+
+</body>
+</html>

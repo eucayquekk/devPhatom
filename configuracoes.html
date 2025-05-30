@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurações - Loja do Zé</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background-color: #f2f2f7;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 24px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    h1 {
+      font-size: 22px;
+      color: #007aff;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .opcao {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 14px;
+      margin-bottom: 12px;
+      color: #1c1c1e;
+      font-size: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .opcao:hover {
+      background-color: #e5f0ff;
+    }
+
+.subopcoes {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  padding-left: 32px;
+}
+
+.subopcoes .subopcao {
+  font-size: 15px;
+  color: #333;
+  padding: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.seta {
+  margin-left: auto;
+  color: #007aff;
+  transition: transform 0.2s;
+}
+
+.opcao.ativa .seta {
+  transform: rotate(90deg);
+}
+    .opcao i {
+      color: #007aff;
+      font-size: 18px;
+    }
+    .modal-fundo {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-caixa {
+  background: #fff;
+  padding: 25px 20px;
+  border-radius: 24px;
+  width: 90%;
+  max-width: 360px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  animation: aparecer 0.25s ease-out;
+}
+
+.modal-caixa h2 {
+  color: #007aff;
+  margin-bottom: 20px;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-caixa input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: 14px;
+  border: 1.5px solid #d1d1d6;
+  font-size: 16px;
+  outline: none;
+  background: #f9f9f9;
+  transition: border 0.2s, background 0.2s;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.modal-caixa input:focus {
+  border-color: #007aff;
+  background-color: #fff;
+}
+
+.modal-caixa input.erro {
+  border-color: #ff3b30;
+  background-color: #fff5f5;
+}
+
+.btn-ios {
+  background: #007aff;
+  color: white;
+  border: none;
+  padding: 14px;
+  width: 100%;
+  border-radius: 16px;
+  font-size: 16px;
+  margin-top: 8px;
+  box-shadow: 0 3px 8px rgba(0, 122, 255, 0.2);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-ios:hover {
+  background: #006ae0;
+}
+
+.btn-cancelar-ios {
+  background: none;
+  color: #007aff;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  border-radius: 16px;
+  font-size: 16px;
+  margin-top: 6px;
+  cursor: pointer;
+}
+
+.erro-msg {
+  color: #ff3b30;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: opacity 0.2s;
+}
+#chat-bolha {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #007aff;
+  color: white;
+  font-size: 22px;
+  padding: 14px 16px;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 999;
+  transition: background 0.3s;
+}
+
+#chat-bolha:hover {
+  background: #005dd1;
+}
+
+#chatbox {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 300px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  display: none;
+  flex-direction: column;
+  z-index: 999;
+  overflow: hidden;
+}
+
+#chat-header {
+  background: #007aff;
+  color: white;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#chat-mensagens {
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.msg {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 80%;
+}
+
+.msg.bot {
+  background: #f1f0f0;
+  align-self: flex-start;
+}
+
+.msg.user {
+  background: #007aff;
+  color: white;
+  align-self: flex-end;
+  text-align: right;
+}
+
+#chat-input {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #eee;
+}
+
+#chat-input input {
+  flex: 1;
+  border: none;
+  border-radius: 14px;
+  padding: 8px;
+  font-size: 14px;
+  outline: none;
+  background: #f2f2f7;
+}
+
+#chat-input button {
+  background: transparent;
+  border: none;
+  color: #007aff;
+  font-size: 20px;
+  margin-left: 8px;
+  cursor: pointer;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Configurações</h1>
+
+    <div class="opcao"><i class="fas fa-lock"></i> Alterar Senha</div>
+    <div class="opcao" onclick="toggleNotificacoes()">
+  <i class="fas fa-bell"></i> Notificações
+  <i class="fas fa-chevron-right seta"></i>
+</div>
+    <div class="subopcoes" id="subnotificacoes">
+    <div class="subopcao"><i class="fas fa-box"></i> Status de Pedido</div>
+    <div class="subopcao"><i class="fas fa-tags"></i> Promoções por E-mail</div>
+    <div class="subopcao"><i class="fas fa-comment-dots"></i> SMS e WhatsApp</div>
+    </div>
+    <div class="opcao" onclick="window.location.href='rastreamento.html'">
+  <i class="fas fa-truck"></i> Rastreamento de Pedidos
+</div>
+    <div class="opcao" onclick="window.location.href='metodos-pagamento.html'">
+  <i class="fas fa-credit-card"></i> Métodos de Pagamento
+</div>
+    <div class="opcao"><i class="fas fa-percent"></i> Cupons e Descontos</div>
+    <div class="opcao"><i class="fas fa-laptop"></i> Dispositivos Conectados</div>
+    <div class="opcao" onclick="window.location.href='ajuda-suporte.html'">
+  <i class="fas fa-question-circle"></i> Ajuda / Suporte
+</div>
+    <div class="opcao"><i class="fas fa-language"></i> Idioma</div>
+    <div class="opcao"><i class="fas fa-shield-alt"></i> Privacidade</div>
+  </div>
+  <!-- Modal Alterar Senha -->
+<div id="modalSenha" class="modal-fundo" style="display: none;">
+  <div class="modal-caixa">
+    <h2>Alterar Senha</h2>
+    <input type="password" id="senhaAtual" placeholder="Senha atual"
+  autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false">
+
+<input type="password" id="novaSenha" placeholder="Nova senha"
+  autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false">
+
+<input type="password" id="confirmarSenha" placeholder="Confirmar nova senha"
+  autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false">
+
+    <button onclick="salvarNovaSenha()" class="btn-ios">Salvar</button>
+    <button onclick="fecharModalSenha()" class="btn-cancelar-ios">Cancelar</button>
+    <p id="mensagemErro" class="erro-msg"></p>
+  </div>
+</div>
+
+<!-- Bolha de chat flutuante -->
+<div id="chat-bolha" onclick="abrirChat()">
+  💬
+</div>
+
+<!-- Janela de chat -->
+<div id="chatbox">
+  <div id="chat-header">ZéBot 🤖 <span onclick="fecharChat()">✖</span></div>
+  <div id="chat-mensagens">
+    <div class="msg bot">Olá! Como posso te ajudar hoje?</div>
+  </div>
+  <div id="chat-input">
+    <input type="text" id="entrada" placeholder="Digite sua mensagem...">
+    <button onclick="enviarMsg()">➤</button>
+  </div>
+</div>
+
+  <script>
+  function toggleNotificacoes() {
+    const submenu = document.getElementById("subnotificacoes");
+    const noti = submenu.previousElementSibling;
+
+    if (submenu.style.display === "flex") {
+      submenu.style.display = "none";
+      noti.classList.remove("ativa");
+    } else {
+      submenu.style.display = "flex";
+      noti.classList.add("ativa");
+    }
+  }
+
+  function sairDaConta() {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = "login.html";
+  }
+  document.querySelector('.opcao').addEventListener('click', abrirModalSenha);
+
+function abrirModalSenha() {
+  document.getElementById("modalSenha").style.display = "flex";
+  document.getElementById("mensagemErro").textContent = "";
+}
+
+function fecharModalSenha() {
+  document.getElementById("modalSenha").style.display = "none";
+}
+
+function salvarNovaSenha() {
+  const senhaAtual = document.getElementById("senhaAtual").value;
+  const novaSenha = document.getElementById("novaSenha").value;
+  const confirmarSenha = document.getElementById("confirmarSenha").value;
+
+  const senhaSalva = localStorage.getItem("senhaUsuario") || "";
+
+  if (senhaAtual !== senhaSalva) {
+    return mostrarErro("Senha atual incorreta.");
+  }
+
+  if (novaSenha.length < 6) {
+    return mostrarErro("Nova senha deve ter no mínimo 6 caracteres.");
+  }
+
+  if (novaSenha !== confirmarSenha) {
+    return mostrarErro("As senhas não coincidem.");
+  }
+
+  localStorage.setItem("senhaUsuario", novaSenha);
+  alert("✅ Senha alterada com sucesso!");
+
+  // Simulação de envio de SMS:
+  console.log("📲 SMS: Sua senha foi alterada com sucesso!");
+
+  fecharModalSenha();
+}
+
+function mostrarErro(msg) {
+  const erro = document.getElementById("mensagemErro");
+  erro.textContent = msg;
+
+  // Aplica visual de erro nos inputs
+  document.getElementById("senhaAtual").classList.add("erro");
+  document.getElementById("novaSenha").classList.add("erro");
+  document.getElementById("confirmarSenha").classList.add("erro");
+
+  // Some depois de 3 segundos
+  setTimeout(() => {
+    erro.textContent = "";
+    document.getElementById("senhaAtual").classList.remove("erro");
+    document.getElementById("novaSenha").classList.remove("erro");
+    document.getElementById("confirmarSenha").classList.remove("erro");
+  }, 3000);
+}
+</script>
+
+<script>
+  function abrirChat() {
+    document.getElementById("chatbox").style.display = "flex";
+    document.getElementById("chat-bolha").style.display = "none";
+  }
+
+  function fecharChat() {
+    document.getElementById("chatbox").style.display = "none";
+    document.getElementById("chat-bolha").style.display = "block";
+  }
+
+function enviarMsg() {
+  const entrada = document.getElementById("entrada");
+  const texto = entrada.value.trim();
+  if (!texto) return;
+
+  const mensagens = document.getElementById("chat-mensagens");
+
+  // Exibir mensagem do usuário
+  const userMsg = document.createElement("div");
+  userMsg.className = "msg user";
+  userMsg.innerText = texto;
+  mensagens.appendChild(userMsg);
+  entrada.value = "";
+
+  // Preparar resposta "inteligente"
+  const msgLower = texto.toLowerCase();
+  let resposta = "Desculpe, ainda não entendi. Mas posso te ajudar no WhatsApp se preferir!";
+
+  if (msgLower.includes("boa noite") || msgLower.includes("bom dia") || msgLower.includes("olá") || msgLower === "oi") {
+    resposta = "Olá! Como posso te ajudar? 😊";
+  } else if (msgLower.includes("pix") || msgLower.includes("boleto") || msgLower.includes("cartão")) {
+    resposta = "Sim! Aceitamos Pix, boleto, cartão de crédito e débito virtual Caixa pelo Mercado Pago.";
+  } else if (msgLower.includes("trocar") || msgLower.includes("troca") || msgLower.includes("devolver") || msgLower.includes("devolução")) {
+    resposta = "Você pode solicitar a troca ou devolução pelo nosso WhatsApp ou e-mail de suporte.";
+  } else if (msgLower.includes("pedido") && msgLower.includes("status") || msgLower.includes("rastrear")) {
+    resposta = "Você pode acompanhar o status do seu pedido na seção de Rastreamento aqui no site.";
+  } else if (msgLower.includes("segunda via")) {
+    resposta = "Para emitir uma segunda via, fale com a gente pelo WhatsApp ou e-mail!";
+  } else if (msgLower.includes("email") || msgLower.includes("contato") || msgLower.includes("ajuda")) {
+    resposta = "Você pode entrar em contato com a gente por e-mail (suporte@lojadoze.com) ou pelo WhatsApp!";
+  }
+
+  setTimeout(() => {
+    const botMsg = document.createElement("div");
+    botMsg.className = "msg bot";
+    botMsg.innerText = resposta;
+    mensagens.appendChild(botMsg);
+    mensagens.scrollTop = mensagens.scrollHeight;
+  }, 800);
+}
+</script>
+</body>
+</html>
